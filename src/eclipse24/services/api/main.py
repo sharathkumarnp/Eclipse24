@@ -40,7 +40,7 @@ from .block import (
     handle_block_deny,
 )
 
-app = FastAPI(title="Sentinel API", version="0.1.0")
+app = FastAPI(title="Eclipse API", version="0.1.0")
 
 
 @app.get("/healthz")
@@ -64,7 +64,7 @@ async def healthz():
     }
 
 
-@app.post("/sentinel/webhooks/slack")
+@app.post("/eclipse/webhooks/slack")
 async def slack_webhook(request: Request):
     try:
         form = await request.form()
