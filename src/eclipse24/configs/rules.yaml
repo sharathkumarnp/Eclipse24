@@ -1,0 +1,100 @@
+config:
+  dry_run: true
+  use_newrelic: true
+  newrelic_account_id: 285377
+  narcissus_flag: is_chaos_enabled
+  slack:
+    approval_channel: "#eclipse24-slack-approvals-demo"
+    fallback_channel: "#eclipse24-fallback-for-emails-demo"
+    sre_manager_channel: "#eclipse24-sre-manager-notifications"
+  jira:
+    base_url: https://<company>-int.atlassian.net/
+    project_key: <your_project_key>
+    issue_type: "Task"
+
+  # Explicit exemptions
+  exemptions:
+    servers:
+      - server1
+      - server2
+      - server3
+
+    emails:
+      - events@abcd.com
+      - training@abcd.com
+
+  # Validation rules
+  validation:
+    email_domain:
+      allow_domains:
+        - abcd.com
+    status:
+      allowed_values:
+        - active
+    runtime:
+      min_hours: 48       # must exist for at least 48h
+    usage:
+      min_inactive_hours: 72 # if inactive > 72h, consider for block
+
+  # Slack / notification messages
+  messages:
+    notice: |
+      *Alert: Production Server Cleanup (48h Limit)*
+      Your internal server is flagged for removal. Creating unjustified internal servers in production is prohibited.
+
+      *Select your next step:*
+      • *Approve Block* – Let the system block the server.
+      • *Extend 3 Days* – Triggers a request for Reporting Manager approval.
+      • *Extend 2 Weeks* – Triggers a request for SRE Manager approval.
+
+      Need this permanently? File a PE JIRA ticket (Ref: *PE-00001*).
+
+      :warning: *Warning:* Server will be blocked automatically in *72 hours* if no action is taken.
+    block: >
+      Your internal JPD server *{server_id}* has been automatically blocked by Eclipse24.
+    manager_extend_notice: |
+      *Action Required: JPD Extension Request*
+      User {user_id} has requested to extend internal server *{server_id}* beyond the standard *48-hour* limit.
+
+      As their manager, your approval is required.
+
+      *Please select an action:*
+      • *Approve Extension* – Grant a 3-day extension.
+      • *Reject & Block* – Deny request; server will be blocked immediately.
+    slack_extend_notice: >
+      :warning: *Eclipse24 Notification*: User *{user_id}* has requested an extension for server *{server_id}*.
+      Manager *{manager_id}* has been notified to approve or deny this request.
+    slack_user_not_found: >
+      :warning: User could not be found in the system. SRE team will review and take necessary action.
+    extend_2_weeks_notice: >
+      :warning: *Eclipse24 Notification*: You have requested a *2-week* extension for server *{server_id}*.
+      This longer extension is intended only for exceptional cases (for example, live customer migrations or
+      critical production activities) and must be approved by the SRE manager group.
+      Your request will be reviewed in the SRE managers channel. You will receive a confirmation in Slack once
+      the request is approved or denied.
+    expiry_pre_notice: >
+      ⏳ Your server *{server_id}* will expire at *{expires_at}* and be blocked immediately after.
+      If you still need this environment, please request SRE Support.
+  
+
+  # Umbrella Accounts
+  umbrella_accounts:
+    aws:
+      accountName: <aws-name>
+    azure:
+      accountName: <azure-name>
+    gcp:
+      accountName: <gcp-name>
+
+  # Reminder settings
+  reminders:
+    initial_owner_timeout_hours: 24
+    max_attempts: 3
+    min_interval_hours: 24
+    escalate_to_manager: true
+    block_after_days: 1
+    pre_block_notice_hours: 12
+
+  # Expiration Extensions
+  expiry:
+    notice_before_hours: 12

@@ -1,0 +1,44 @@
+# Eclipse / Eclipse24 - Kafka topology
+
+version: 1
+
+kafka:
+  # Defaults applied if not overridden per topic
+  default:
+    partitions: 3
+    replication_factor: 3
+#    cleanup_policy: delete
+#    retention_ms: 604800000
+
+  topics:
+    validation:
+      topic: eclipse24.validation.v2
+      description: "Topic for servers pending validation"
+
+    waiting:
+      topic: eclipse24.waiting.v2
+      description: "Topic for servers waiting for Slack approval"
+
+    block:
+      topic: eclipse24.block.v2
+      description: "Topic for servers that failed or were denied"
+
+    audit:
+      topic: eclipse24.audit.v2
+      description: "Topic for final audit logging"
+
+    extensions:
+      topic: eclipse24.extensions.v2
+      description: "Topic for handling custom extensions (e.g., extra time)"
+
+    waiting_state:
+      topic: eclipse24.waiting.state.v2
+      description: "Topic for managing waiting state transitions"
+
+    reminders:
+      topic: eclipse24.reminders.v2
+      description: "Topic for sending reminder notifications"
+
+    expiries:
+      topic: eclipse24.expiries.v2
+      description: "Topic for handling expiry of waiting states"
